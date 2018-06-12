@@ -334,9 +334,67 @@ LIMIT 1
 
 
 
+// L3-31
+// Q1 @@@@@@@@@@@@@@@
+SELECT a.name, SUM(o.total_amt_usd), 
+		CASE WHEN SUM(o.total_amt_usd) > 200000 THEN 'Top'
+		     WHEN SUM(o.total_amt_usd) BETWEEN 100000 AND 200000 THEN 'Middle'
+		     WHEN SUM(o.total_amt_usd) < 100000 THEN 'Bottom' END AS level
+FROM accounts AS a, orders AS o
+WHERE o.account_id = a.id
+GROUP BY a.name
+ORDER BY SUM(o.total_amt_usd) DESC 
+/*
+EOG Resources	382873.30	Top
+Mosaic	345618.59	Top
+IBM	326819.48	Top
+*/
 
+// Q2 @@@@@@@@@@@@@@@
+SELECT a.name, SUM(o.total_amt_usd), 
+		CASE WHEN SUM(o.total_amt_usd) > 200000 THEN 'Top'
+		     WHEN SUM(o.total_amt_usd) BETWEEN 100000 AND 200000 THEN 'Middle'
+		     WHEN SUM(o.total_amt_usd) < 100000 THEN 'Bottom' END AS level
+FROM accounts AS a, orders AS o
+WHERE o.account_id = a.id AND o.occurred_at >= '2016-01-01'
+GROUP BY a.name
+ORDER BY SUM(o.total_amt_usd) DESC
+/*
+Pacific Life	255319.18	Top
+Mosaic	172180.04	Middle
+CHS	163471.78	Middle
+*/
 
+// Q3 @@@@@@@@@@@@@@@
+SELECT s.name, COUNT(o.id), 
+		CASE WHEN COUNT(o.id) > 200 THEN 'Top' 
+			 ELSE NULL END AS top_sales
+FROM sales_reps AS s, accounts AS a, orders AS o
+WHERE s.id = a.sales_rep_id AND o.account_id = a.id
+GROUP BY s.name
+ORDER BY 2 DESC
+/*
+Earlie Schleusner	335	Top
+Vernita Plump	299	Top
+Tia Amato	267	Top
+*/
 
+// Q4 @@@@@@@@@@@@@@@
+SELECT s.name, COUNT(o.id), SUM(o.total_amt_usd),
+		CASE WHEN COUNT(o.id) > 200 OR SUM(o.total_amt_usd) > 750000 THEN 'Top' 
+			 WHEN (COUNT(o.id) <= 200 AND COUNT(o.id) > 150) OR (SUM(o.total_amt_usd) <= 750000 AND SUM(o.total_amt_usd) > 500000) THEN 'Middle'
+			 WHEN COUNT(o.id) <= 150 OR SUM(o.total_amt_usd) <= 500000 THEN 'Low' END AS top_sales
+FROM sales_reps AS s, accounts AS a, orders AS o
+WHERE s.id = a.sales_rep_id AND o.account_id = a.id
+GROUP BY s.name
+ORDER BY 3 DESC
+/*
+Earlie Schleusner	335	1098137.72	top
+Tia Amato	267	1010690.60	top
+Vernita Plump	299	934212.93	top
+Georgianna Chisholm	256	886244.12	top
+Arica Stoltzfus	186	810353.34	top
+*/
 
 
 
