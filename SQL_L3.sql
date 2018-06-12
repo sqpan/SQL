@@ -179,6 +179,49 @@ WHERE s.id = a.sales_rep_id
 ORDER BY agent_name
 
 
+// L3-27
+SELECT DATE_TRUNC('year', occurred_at) AS year, SUM(total_amt_usd)
+FROM orders 
+GROUP BY DATE_TRUNC('year', occurred_at)
+ORDER BY SUM(total_amt_usd) DESC
+// 2016-01-01T00:00:00.000Z	12864917.92
+
+SELECT DATE_PART('month', occurred_at) AS year, SUM(total_amt_usd)
+FROM orders 
+WHERE occurred_at BETWEEN '2014-01-01' AND '2017-01-01'
+GROUP BY DATE_PART('month', occurred_at)
+ORDER BY SUM(total_amt_usd) DESC
+// 12 month
+// WHERE has to be before group BY
+
+SELECT DATE_PART('year', occurred_at) AS year, COUNT(id)
+FROM orders 
+WHERE occurred_at BETWEEN '2014-01-01' AND '2017-01-01'
+GROUP BY DATE_PART('year', occurred_at)
+ORDER BY 2 DESC
+/*
+2016	12864917.92
+2015	5752004.94
+2014	4069106.54
+*/
+
+SELECT DATE_PART('month', occurred_at) AS year, COUNT(id)
+FROM orders 
+WHERE occurred_at BETWEEN '2014-01-01' AND '2017-01-01'
+GROUP BY DATE_PART('month', occurred_at)
+ORDER BY 2 DESC
+
+SELECT DATE_TRUNC('month', o.occurred_at) AS year, SUM(o.gloss_amt_usd), a.name
+FROM orders AS o, accounts AS a
+WHERE o.account_id = a.id AND a.name = 'Walmart'
+GROUP BY 1, 3
+ORDER BY 2 DESC
+LIMIT 1
+// 2016-05-01T00:00:00.000Z	9257.64	Walmart
+// Lack of o.account_id = a.id caused more unrelated data get into the results
+
+
+
 
 
 
