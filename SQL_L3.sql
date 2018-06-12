@@ -178,6 +178,118 @@ FROM accounts AS a,sales_reps AS s
 WHERE s.id = a.sales_rep_id
 ORDER BY agent_name
 
+// L3-23 
+// HAVING is WHERE for aggregate clause, because WHERE 
+// does not work on aggregate 
+// HAVING is after GROUP BY but before ORDER BY
+// WHERE is after FROM, JOIN ON, but before GROUP BY
+
+// Q1 @@@@@@@@@@@@@@@   
+SELECT s.name, COUNT(a.id)
+FROM accounts AS a, sales_reps AS s 
+WHERE s.id = a.sales_rep_id
+HAVING COUNT(a.id) > 5;
+ORDER BY s.name
+// This false
+
+SELECT s.name, COUNT(a.id)
+FROM accounts AS a, sales_reps AS s 
+WHERE s.id = a.sales_rep_id
+GROUP BY s.name
+HAVING COUNT(a.id) > 5
+ORDER BY s.name
+// 34 results
+// This is the correct one. 
+// 1. remember to include GROUP BY 
+// 2. HAVING is after GROUP BY
+
+// Q2 @@@@@@@@@@@@@@@ 
+SELECT a.name, COUNT(o.id)
+FROM accounts AS a, orders AS o
+WHERE a.id = o.account_id
+GROUP BY a.name
+HAVING COUNT(o.id) > 20
+ORDER BY a.name
+// 120 result
+
+// Q3 @@@@@@@@@@@@@@@ 
+SELECT a.name, COUNT(o.id) as max_order
+FROM accounts AS a, orders AS o
+WHERE a.id = o.account_id
+GROUP BY a.name
+ORDER BY max_order DESC
+LIMIT 1
+// Leucadia National	71
+
+// Q4 @@@@@@@@@@@@@@@ 
+SELECT a.name, SUM(o.total_amt_usd)
+FROM accounts AS a, orders AS o
+WHERE a.id = o.account_id
+GROUP BY a.name
+HAVING SUM(o.total_amt_usd) > 30000
+ORDER BY a.name
+// aggregate cannot use alias
+// 204 results	
+
+// Q5 @@@@@@@@@@@@@@@ 
+SELECT a.name, SUM(o.total_amt_usd)
+FROM accounts AS a, orders AS o
+WHERE a.id = o.account_id
+GROUP BY a.name
+HAVING SUM(o.total_amt_usd) < 1000
+ORDER BY a.name
+// 3 results
+>>>>>>> origin/master
+
+// Q6 @@@@@@@@@@@@@@@ 
+SELECT a.name, SUM(o.total_amt_usd)
+FROM accounts AS a, orders AS o
+WHERE a.id = o.account_id
+GROUP BY a.name
+ORDER BY SUM(o.total_amt_usd) DESC
+LIMIT 1
+// EOG Resources	382873.30
+
+// Q7 @@@@@@@@@@@@@@@ 
+SELECT a.name, SUM(o.total_amt_usd)
+FROM accounts AS a, orders AS o
+WHERE a.id = o.account_id
+GROUP BY a.name
+ORDER BY SUM(o.total_amt_usd) 
+LIMIT 1
+// Nike	390.25
+
+// Q8 @@@@@@@@@@@@@@@ 
+SELECT a.name, COUNT(w.channel)
+FROM web_events AS w, accounts AS a
+WHERE a.id = w.account_id AND w.channel = 'facebook'
+GROUP BY a.name
+HAVING COUNT(w.channel) > 6
+ORDER BY a.name
+// 46 results
+// w.channel = 'facebook' is the right answer
+// w.channel = "facebook" does not work
+
+// Q9 @@@@@@@@@@@@@@@ 
+SELECT a.name, COUNT(w.channel)
+FROM web_events AS w, accounts AS a
+WHERE a.id = w.account_id AND w.channel = 'facebook'
+GROUP BY a.name
+ORDER BY COUNT(w.channel) DESC
+LIMIT 1
+// Gilead Sciences	16
+
+// Q10 @@@@@@@@@@@@@@@
+SELECT a.name, w.channel, COUNT(w.id)
+FROM web_events AS w, accounts AS a
+WHERE a.id = w.account_id
+GROUP BY a.name, w.channel
+ORDER BY COUNT(w.id) DESC, a.name;
+// 1509 results
+// Shows all company most used channel, order by total time of channel used
+// if you want to sort the data with descend order, 
+// DESC has to follow the clause right away
+
 
 // L3-27
 SELECT DATE_TRUNC('year', occurred_at) AS year, SUM(total_amt_usd)
@@ -219,15 +331,6 @@ ORDER BY 2 DESC
 LIMIT 1
 // 2016-05-01T00:00:00.000Z	9257.64	Walmart
 // Lack of o.account_id = a.id caused more unrelated data get into the results
-
-
-
-
-
-
-
-
-
 
 
 
