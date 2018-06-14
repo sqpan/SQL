@@ -38,4 +38,23 @@ JOIN
 ON region_max.region_id = info.region_id AND region_max.max = info.total
 ORDER BY region_max.max DESC 
 
+// Q2 @@@@@@@@@@@@@@@@@@@@@@@
+SELECT total.name, total.total_amt, count.total_order
+FROM 
+	(SELECT MAX(total.total_amt) AS max 
+	FROM 
+		(SELECT r.name, SUM(total_amt_usd) AS total_amt
+		FROM region AS r, sales_reps AS s, accounts AS a, orders AS o 
+		WHERE r.id = s.region_id AND s.id = a.sales_rep_id AND o.account_id = a.id
+		GROUP BY r.name
+		ORDER BY total_amt DESC) AS total
+	) AS max
+JOIN
+	(SELECT r.name, COUNT(o.id) AS total_order
+	FROM region AS r, sales_reps AS s, accounts AS a, orders AS o 
+	WHERE r.id = s.region_id AND s.id = a.sales_rep_id AND o.account_id = a.id
+	GROUP BY r.name
+	ORDER BY total_order DESC) AS count
+ON total.name = count.name, 
+// aggregate function cannot be nested
 
