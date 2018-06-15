@@ -130,3 +130,64 @@ aacr77XCELENERGY
 aadr59EOGRESOURCES
 aaia59PHILIPMORRISINTERNATIONAL
 */
+
+// L5-12
+// TO_DATE(month, 'month')  	this function change a string type month data into data
+// CAST(data_column AS DATE)  	this function cast the variable type
+// DATE_PART(month, '2013/01/01') 	will return 01
+// DATE_TRUNC('year', occurred_at) 	will return '20xx/01/01'
+// SUBSTR (str, position, [length])
+SELECT date, SUBSTR(date, 7,4) || '/' || SUBSTR(date, 1, 5) AS monthAndDay,
+		CAST(SUBSTR(date, 7,4) || '/' || SUBSTR(date, 1, 5) AS DATE) AS newDate
+FROM sf_crime_data
+
+// L5-15
+// COALESCE(expr1, expr2, ...., expr_n)	return the first not NULL value
+// SELECT COALESCE(NULL, 1, 2, 'W3Schools.com');	return 1
+
+// STEP 1
+SELECT *
+FROM accounts a
+LEFT JOIN orders o
+ON a.id = o.account_id
+WHERE o.total IS NULL;
+// 	Goldman Sachs Group	www.gs.com	40.75744399	-73.96730918	Loris Manfredi	321690										
+
+// STEP 2
+SELECT COALESCE(a.id, a.id) filled_id, a.name, a.website, a.lat, a.long, a.primary_poc, a.sales_rep_id, o.*
+FROM accounts a
+LEFT JOIN orders o
+ON a.id = o.account_id
+WHERE o.total IS NULL;
+// 1731	Goldman Sachs Group	www.gs.com	40.75744399	-73.96730918	Loris Manfredi	321690											
+
+//STEP 3
+SELECT COALESCE(a.id, a.id) filled_id, a.name, a.website, a.lat, a.long, a.primary_poc, a.sales_rep_id, COALESCE(o.account_id, a.id) account_id, o.occurred_at, o.standard_qty, o.gloss_qty, o.poster_qty, o.total, o.standard_amt_usd, o.gloss_amt_usd, o.poster_amt_usd, o.total_amt_usd
+FROM accounts a
+LEFT JOIN orders o
+ON a.id = o.account_id
+WHERE o.total IS NULL;
+// 1731	Goldman Sachs Group	www.gs.com	40.75744399	-73.96730918	Loris Manfredi	321690	1731									
+
+
+//STEP 4
+SELECT COALESCE(a.id, a.id) filled_id, a.name, a.website, a.lat, a.long, a.primary_poc, a.sales_rep_id, COALESCE(o.account_id, a.id) account_id, o.occurred_at, COALESCE(o.standard_qty, 0) standard_qty, COALESCE(o.gloss_qty,0) gloss_qty, COALESCE(o.poster_qty,0) poster_qty, COALESCE(o.total,0) total, COALESCE(o.standard_amt_usd,0) standard_amt_usd, COALESCE(o.gloss_amt_usd,0) gloss_amt_usd, COALESCE(o.poster_amt_usd,0) poster_amt_usd, COALESCE(o.total_amt_usd,0) total_amt_usd
+FROM accounts a
+LEFT JOIN orders o
+ON a.id = o.account_id
+WHERE o.total IS NULL;
+// 1731	Goldman Sachs Group	www.gs.com	40.75744399	-73.96730918	Loris Manfredi	321690	1731		0	0	0	0	0	0	0	0
+
+// STEP 5
+SELECT COUNT(a.id)
+FROM accounts a
+LEFT JOIN orders o
+ON a.id = o.account_id
+// 6913
+
+// STEP 6
+SELECT COALESCE(a.id, a.id) filled_id, a.name, a.website, a.lat, a.long, a.primary_poc, a.sales_rep_id, COALESCE(o.account_id, a.id) account_id, o.occurred_at, COALESCE(o.standard_qty, 0) standard_qty, COALESCE(o.gloss_qty,0) gloss_qty, COALESCE(o.poster_qty,0) poster_qty, COALESCE(o.total,0) total, COALESCE(o.standard_amt_usd,0) standard_amt_usd, COALESCE(o.gloss_amt_usd,0) gloss_amt_usd, COALESCE(o.poster_amt_usd,0) poster_amt_usd, COALESCE(o.total_amt_usd,0) total_amt_usd
+FROM accounts a
+LEFT JOIN orders o
+ON a.id = o.account_id;
+
