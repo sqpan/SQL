@@ -1,4 +1,4 @@
-// L4-7
+# L4-7
 SELECT 
 	DATE_TRUNC('month', occurred_at) AS month, 
 	AVG(standard_qty) AS standard,
@@ -12,12 +12,12 @@ WHERE month =
 	LIMIT 1)
 GROUP BY 1
 
-//The easier way
+#The easier way
 SELECT DATE_TRUNC('month', MIN(occurred_at)) 
 FROM orders;
 
-// L4-10
-// Q1 @@@@@@@@@@@@@@@@@@@@@@@
+# L4-10
+# Q1 @@@@@@@@@@@@@@@@@@@@@@@
 SELECT info.agent_name, info.region_name, region_max.max
 FROM 
 	(SELECT s.name AS agent_name, s.region_id AS region_id, r.name AS region_name, SUM(o.total_amt_usd) AS total
@@ -44,7 +44,7 @@ Georgianna Chisholm	West		886244.12
 Charles Bidwell		Midwest		675637.19
 */
 
-// Q2 @@@@@@@@@@@@@@@@@@@@@@@
+# Q2 @@@@@@@@@@@@@@@@@@@@@@@
 SELECT max.region_name, max.top, count.total_order
 FROM 
 	(SELECT region_name, MAX(total.total_amt) AS top 
@@ -65,11 +65,11 @@ JOIN
 	GROUP BY region_name
 	ORDER BY total_order DESC) AS count
 ON max.region_name = count.region_name 
-// aggregate function cannot be nested
-// 	Northeast	7744405.36	2357
+# aggregate function cannot be nested
+# 	Northeast	7744405.36	2357
 
 
-// Q3 @@@@@@@@@@@@@@@@@@@@@@@
+# Q3 @@@@@@@@@@@@@@@@@@@@@@@
 SELECT COUNT(*)
 FROM 
 	(SELECT a.name, SUM(o.total) AS total_qty
@@ -87,11 +87,11 @@ WHERE  total_qty_per_account.total_qty >
 		GROUP BY a.name
 		ORDER BY 1 DESC
 		LIMIT 1) AS info)
-// 3
+# 3
 
 
 
-// Q4 @@@@@@@@@@@@@@@@@@@@@@@
+# Q4 @@@@@@@@@@@@@@@@@@@@@@@
 SELECT max.account_name, max.max_amt, channel_count.channel, channel_count.events_count
 FROM 
 	(SELECT a.name AS account_name, SUM(total_amt_usd) AS max_amt
@@ -119,7 +119,7 @@ EOG Resources	382873.30	twitter		5
 EOG Resources	382873.30	banner		4
 */
 
-// Q5 @@@@@@@@@@@@@@@@@@@@@@@
+# Q5 @@@@@@@@@@@@@@@@@@@@@@@
 SELECT AVG(max.max_amt)
 FROM
 	(SELECT a.name AS account_name, SUM(total_amt_usd) AS max_amt
@@ -129,9 +129,9 @@ FROM
 	ORDER BY max_amt DESC 
 	LIMIT 10)
 	AS max
-// 304846.969000000000
+# 304846.969000000000
 
-// Q6 @@@@@@@@@@@@@@@@@@@@@@@
+# Q6 @@@@@@@@@@@@@@@@@@@@@@@
 SELECT AVG(account_more_than_avg.account_avg) 
 FROM 
 	(SELECT a.name AS account_name, AVG(o.total_amt_usd) AS account_avg
@@ -142,10 +142,10 @@ FROM
 WHERE account_more_than_avg.account_avg > 
 	(SELECT AVG(o.total_amt_usd)
 	FROM orders AS o) AS average
-// 4721.1397439971747168
+# 4721.1397439971747168
 
-// L4-14
-// Q1 @@@@@@@@@@@@@@@@@@@@@@@
+# L4-14
+# Q1 @@@@@@@@@@@@@@@@@@@@@@@
 WITH info AS (
 	SELECT s.name AS agent_name, s.region_id AS region_id, r.name AS region_name, SUM(o.total_amt_usd) AS total
 	FROM sales_reps AS s, accounts AS a, orders AS o, region AS r 

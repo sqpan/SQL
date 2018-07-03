@@ -1,13 +1,13 @@
-// WHERE accounts.sales_rep_id IS NULL OR sales_reps.id IS NULL
-// The above scentance can isolate the unmatch data in from accounts and sales_reps
+# WHERE accounts.sales_rep_id IS NULL OR sales_reps.id IS NULL
+# The above scentance can isolate the unmatch data in from accounts and sales_reps
 
-// L7-6
+# L7-6
 SELECT a.name AS account_name, a.primary_poc AS primary, s.name AS sales_name
 FROM accounts AS a
 LEFT JOIN sales_reps AS s
 ON s.id = a.sales_rep_id AND a.primary_poc < s.name
 
-// L7-9
+# L7-9
 SELECT e1.id AS e1_id,
        e1.account_id AS e1_account_id,
        e1.occurred_at AS e1_occurred_at,
@@ -42,16 +42,16 @@ Column names, in fact, don't need to be the same to append two tables but you wi
 
 UNION will only return the distinct data, UNION ALL will return all of data
 */
-// L7-12
-// Q1 @@@@@@@@@@@@@@@@@@@@@@@
+# L7-12
+# Q1 @@@@@@@@@@@@@@@@@@@@@@@
 SELECT *
 FROM accounts AS a1
 UNION ALL 
 SELECT *
 FROM accounts AS a2
-// 702 reults
+# 702 reults
 
-// Q2 @@@@@@@@@@@@@@@@@@@@@@@
+# Q2 @@@@@@@@@@@@@@@@@@@@@@@
 WITH double_accounts AS(
     SELECT *
   	FROM accounts AS a1
@@ -84,9 +84,9 @@ Aggregations is executed before limit, so it won't help to fast the query
 In this case, sub query will help to speed up
 */
 
-// Add EXPLAIN before query can show the run time. 
-// Try to change query and run it again to see if there is improve
-// DISTINCT take a lot of time. it need to O(n) for every entry
+# Add EXPLAIN before query can show the run time. 
+# Try to change query and run it again to see if there is improve
+# DISTINCT take a lot of time. it need to O(n) for every entry
 
 WITH order1 AS (
 	SELECT DATE_TRUNC('day', o.occurred_at) AS date,
@@ -111,6 +111,6 @@ FULL JOIN web_event
 ON web_event.date = order1.date 
 ORDER BY 1 DESC
 
-// Be careful, since SQL is not case senstive, order cannot be used as alias name 
+# Be careful, since SQL is not case senstive, order cannot be used as alias name 
 
 

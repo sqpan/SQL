@@ -1,4 +1,4 @@
-//L1-22
+#L1-22
 
 SELECT id, occurred_at, total_amt_usd
 FROM orders
@@ -11,7 +11,7 @@ ORDER BY occurred_at, total_amt_usd DESC
 LIMIT 10;
 
 
-//L1-25
+#L1-25
 
 SELECT *
 FROM orders
@@ -24,14 +24,14 @@ WHERE total_amt_usd < 500
 LIMIT 10;
 
 
-//L1-28
+#L1-28
 
 SELECT name, website, primary_poc
 FROM accounts
 WHERE name = 'Exxon Mobil';
 
 
-//L1-31
+#L1-31
 
 SELECT id, 
 	   account_id, 
@@ -46,7 +46,7 @@ FROM orders
 WHERE total_amt_usd != 0;
 
 
-//L1-35
+#L1-35
 SELECT id, name, website
 FROM accounts
 WHERE name LIKE 'C%';
@@ -60,7 +60,7 @@ FROM accounts
 WHERE name LIKE '%s';
 
 
-//L1-38
+#L1-38
 SELECT name, primary_poc, sales_rep_id
 FROM accounts
 WHERE name IN ('Walmart', 'Target', 'Nordstrom');
@@ -70,7 +70,7 @@ FROM web_events
 WHERE channel IN ('organic', 'adwords');
 
 
-//L1-41
+#L1-41
 
 SELECT  name, primary_poc, sales_rep_id
 FROM accounts
@@ -81,7 +81,7 @@ FROM web_events
 WHERE channel NOT IN ('organic', 'adwords');
 
 
-//L1-44
+#L1-44
 
 SELECT *
 FROM orders
@@ -97,7 +97,7 @@ WHERE channel IN ('organic', 'adwords') AND occurred_at BETWEEN '2016-01-01' AND
 ORDER BY occurred_at DESC
 
 
-//L1-47
+#L1-47
 
 SELECT id
 FROM orders
