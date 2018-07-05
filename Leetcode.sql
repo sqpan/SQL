@@ -88,9 +88,23 @@ WHERE MOD(s3.Id, 2) = 1 AND s3.Id = (SELECT MAX(s3.Id) FROM seat)
 # similar with line 76, use seat instead of s3
 ORDER BY Id
 
-// 180. Consecutive Numbers
+# 180. Consecutive Numbers
 SELECT DISTINCT l1.Num AS ConsecutiveNums
 FROM Logs l1, Logs l2, Logs l3
 WHERE l1.Num = l2.Num AND l2.Num = l3.Num AND l1.Id + 1 = l2.Id AND l2.Id + 1 = l3.Id
  
-//
+# 184. Department Highest Salary
+SELECT d.Name AS Department, e.Name AS Employee, m.Max AS Salary
+FROM Department d, 
+    (SELECT max(e.Salary) AS Max, e.DepartmentId FROM Employee e GROUP BY e.DepartmentId) AS m,
+    Employee e
+WHERE m.DepartmentId = d.Id AND m.Max = e.Salary AND d.ID = e.DepartmentID
+/* Bugs
+ 	1. SELECT e.name, max(e.Salary) AS Max, e.DepartmentId FROM Employee e GROUP BY e.DepartmentId
+	will generate a table with each department's highest salary with first name of department.
+	The name is not match to the highest salary
+	2. WHERE condition need to add d.ID = e.DepartmentID, or it generates cross join of highest 
+	salary with every department name
+*/
+	 
+
