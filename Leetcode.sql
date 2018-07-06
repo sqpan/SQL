@@ -107,4 +107,20 @@ WHERE m.DepartmentId = d.Id AND m.Max = e.Salary AND d.ID = e.DepartmentID
 	salary with every department name
 */
 	 
+# 177. Nth Highest Salary
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+DECLARE M INT;
+SET M = N - 1;
+  RETURN (
+      SELECT DISTINCT Salary FROM Employee ORDER BY Salary DESC LIMIT M, 1
+  );
+END
+/*
+1. Cannot use N - 1 in LIMIT Clause
+2. LIMIT M, 1 is short for LIMIT 1 OFFSET M
+3. DISTINCT is necessary. example:first 2: 1,100; 2, 100; If no DISTINCT, return 100
+*/
+
+
 
